@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
       <main>
         <h1>Todo List</h1>
         <section>
-          <form id="todo-form">
+          <form id="todo-form" hx-post="/todos" hx-target="#todos" hx-swap="beforeend">
             <div>
               <label htmlFor="todo">Todo</label>
               <input type="text" id="todo" name="todo" />
@@ -32,19 +32,32 @@ app.get("/", (req, res) => {
         </section>
         <section>
           <ul id="todos">
-          ${todos.map(
-            (todo, index) => `
+          ${todos
+            .map(
+              (todo, index) => `
             <li id="todo-${index}">
               <span>${todo}</span>
               <button>Remove</button>
             </li>
           `
-          )}
+            )
+            .join("")}
           </ul>
         </section>
       </main>
     </body>
   </html>
+  `);
+});
+
+app.post("/todos", (req, res) => {
+  const enteredTodo = req.body.todo;
+  todos.push(enteredTodo);
+  res.send(`
+    <li id="todo-${todos.length - 1}">
+      <span>${enteredTodo}</span>
+      <button>Remove</button>
+    </li>
   `);
 });
 

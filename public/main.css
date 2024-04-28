@@ -72,11 +72,11 @@ form button:active {
   background-color: #4c0899;
 }
 
-#goals {
+#todos {
   margin: 2rem 0;
 }
 
-#goals li {
+#todos li {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,11 +88,11 @@ form button:active {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-#goals li span {
+#todos li span {
   font-weight: bold;
 }
 
-#goals li button {
+#todos li button {
   font: inherit;
   padding: 0.5rem 1rem;
   border: none;
@@ -101,7 +101,7 @@ form button:active {
   border-radius: 4px;
 }
 
-#goals li button:hover,
-#goals li button:active {
+#todos li button:hover,
+#todo li button:active {
   background-color: #f6459d;
 }

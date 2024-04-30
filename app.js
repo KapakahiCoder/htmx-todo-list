@@ -2,6 +2,20 @@ import express from "express";
 
 const todos = [];
 
+function renderTodoListItem(id, text) {
+  return `
+    <li id="todo-${id}">
+    <span>${text}</span>
+    <button 
+      hx-delete="/todos/${id}" 
+      hx-target="#todo-${id}"
+      >
+        Remove
+      </button>
+  </li>
+  `;
+}
+
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
@@ -31,16 +45,9 @@ app.get("/", (req, res) => {
           </form>
         </section>
         <section>
-          <ul id="todos">
+          <ul id="todos" hx-swap="outerHTML">
           ${todos
-            .map(
-              (todo) => `
-            <li id="todo-${todo.id}">
-              <span>${todo.text}</span>
-              <button hx-delete="/todos/${todo.id}" hx-target="#todo-${todo.id}" hx-swap="outerHTML">Remove</button>
-            </li>
-          `
-            )
+            .map((todo) => renderTodoListItem(todo.id, todo.text))
             .join("")}
           </ul>
         </section>
@@ -54,12 +61,7 @@ app.post("/todos", (req, res) => {
   const enteredTodo = req.body.todo;
   const id = new Date().getTime().toString();
   todos.push({ text: enteredTodo, id: id });
-  res.send(`
-    <li id="todo-${id}">
-      <span>${enteredTodo}</span>
-      <button hx-delete="/todos/${id}" hx-target="#todo-${id}" hx-swap="outerHTML">Remove</button>
-    </li>
-  `);
+  res.send(renderTodoListItem(id, enteredTodo));
 });
 
 app.delete("/todos/:id", (req, res) => {

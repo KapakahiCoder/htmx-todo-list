@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
               (todo, index) => `
             <li id="todo-${index}">
               <span>${todo}</span>
-              <button>Remove</button>
+              <button hx-delete="/todos/${index}" hx-target="#todo-${index}" hx-swap="outerHTML">Remove</button>
             </li>
           `
             )
@@ -53,12 +53,18 @@ app.get("/", (req, res) => {
 app.post("/todos", (req, res) => {
   const enteredTodo = req.body.todo;
   todos.push(enteredTodo);
+  const index = todos.length - 1;
   res.send(`
-    <li id="todo-${todos.length - 1}">
+    <li id="todo-${index}">
       <span>${enteredTodo}</span>
-      <button>Remove</button>
+      <button hx-delete="/todos/${index}" hx-target="#todo-${index}" hx-swap="outerHTML">Remove</button>
     </li>
   `);
 });
 
+app.delete("/todos/:idx", (req, res) => {
+  const index = req.params.idx;
+  todos.splice(index, 1);
+  res.send();
+});
 app.listen(3000);

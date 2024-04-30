@@ -34,10 +34,10 @@ app.get("/", (req, res) => {
           <ul id="todos">
           ${todos
             .map(
-              (todo, index) => `
-            <li id="todo-${index}">
-              <span>${todo}</span>
-              <button hx-delete="/todos/${index}" hx-target="#todo-${index}" hx-swap="outerHTML">Remove</button>
+              (todo) => `
+            <li id="todo-${todo.id}">
+              <span>${todo.text}</span>
+              <button hx-delete="/todos/${todo.id}" hx-target="#todo-${todo.id}" hx-swap="outerHTML">Remove</button>
             </li>
           `
             )
@@ -52,18 +52,19 @@ app.get("/", (req, res) => {
 
 app.post("/todos", (req, res) => {
   const enteredTodo = req.body.todo;
-  todos.push(enteredTodo);
-  const index = todos.length - 1;
+  const id = new Date().getTime().toString();
+  todos.push({ text: enteredTodo, id: id });
   res.send(`
-    <li id="todo-${index}">
+    <li id="todo-${id}">
       <span>${enteredTodo}</span>
-      <button hx-delete="/todos/${index}" hx-target="#todo-${index}" hx-swap="outerHTML">Remove</button>
+      <button hx-delete="/todos/${id}" hx-target="#todo-${id}" hx-swap="outerHTML">Remove</button>
     </li>
   `);
 });
 
-app.delete("/todos/:idx", (req, res) => {
-  const index = req.params.idx;
+app.delete("/todos/:id", (req, res) => {
+  const id = req.params.id;
+  const index = todos.findIndex((todo) => todo.id === id);
   todos.splice(index, 1);
   res.send();
 });

@@ -8,7 +8,8 @@ function renderTodoListItem(id, text) {
     <span>${text}</span>
     <button 
       hx-delete="/todos/${id}" 
-      hx-target="#todo-${id}"
+      hx-target="closest li"
+      hx-confirm="Are you sure?"
       >
         Remove
       </button>
@@ -36,7 +37,13 @@ app.get("/", (req, res) => {
       <main>
         <h1>Todo List</h1>
         <section>
-          <form id="todo-form" hx-post="/todos" hx-target="#todos" hx-swap="beforeend">
+          <form 
+            id="todo-form" 
+            hx-post="/todos" 
+            hx-target="#todos" 
+            hx-swap="beforeend"
+            hx-on::after-request="this.reset()"
+            hx-disabled-elt="form button">
             <div>
               <label htmlFor="todo">Todo</label>
               <input type="text" id="todo" name="todo" />
